@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A private, explainable insurance policy comparison demo.">
+  <title>Policy Compass</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" aria-label="Application header">
+    <a class="brand" href="./" aria-label="Policy Compass home">
+      <span class="brand-mark" aria-hidden="true">PC</span>
+      <span>Policy Compass</span>
+    </a>
+    <div class="header-actions">
+      <button id="changeLocale" class="text-button" type="button" hidden></button>
+      <button id="resetApp" class="text-button" type="button" hidden></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="liveRegion" class="sr-only" aria-live="polite"></div>
+
+    <section id="onboarding" class="onboarding" aria-labelledby="onboardingTitle">
+      <div class="onboarding-copy">
+        <p class="eyebrow">Insurance, made legible</p>
+        <h1 id="onboardingTitle">Start with where you live.</h1>
+        <p class="lede">Choose a country. We’ll continue in an official language and show only locally configured options.</p>
+        <div class="trust-row" aria-label="Privacy features">
+          <span>◆ No sign-up</span><span>◆ Data stays here</span><span>◆ Explainable results</span>
+        </div>
+      </div>
+      <div class="country-panel">
+        <label for="countrySearch">Country / País / Paese / Land / Pays</label>
+        <input id="countrySearch" type="search" autocomplete="off" placeholder="Search…">
+        <div id="countryGrid" class="country-grid" role="list"></div>
+        <div id="languagePanel" class="language-panel" hidden>
+          <p id="languagePrompt"></p>
+          <div id="languageChoices" class="language-choices"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="app" hidden>
+      <nav class="stepper" aria-label="Progress">
+        <ol>
+          <li class="active" data-step="1"><span>1</span><b data-i18n="stepType"></b></li>
+          <li data-step="2"><span>2</span><b data-i18n="stepNeeds"></b></li>
+          <li data-step="3"><span>3</span><b data-i18n="stepResults"></b></li>
+        </ol>
+      </nav>
+
+      <div class="app-shell">
+        <aside class="context-card">
+          <span class="context-icon" id="contextFlag" aria-hidden="true"></span>
+          <p class="eyebrow" data-i18n="comparingIn"></p>
+          <h2 id="contextCountry"></h2>
+          <p id="regulatoryNotice"></p>
+          <div class="privacy-note">
+            <strong data-i18n="privateTitle"></strong>
+            <span data-i18n="privateBody"></span>
+          </div>
+        </aside>
+
+        <div class="workflow">
+          <section id="step1" class="step-section" aria-labelledby="typeTitle">
+            <p class="eyebrow" data-i18n="stepOne"></p>
+            <h1 id="typeTitle" data-i18n="chooseType"></h1>
+            <p class="section-intro" data-i18n="chooseTypeHint"></p>
+            <div id="categoryGrid" class="category-grid"></div>
+          </section>
+
+          <section id="step2" class="step-section" aria-labelledby="needsTitle" hidden>
+            <button class="back-button" type="button" data-back="1">← <span data-i18n="back"></span></button>
+            <p class="eyebrow" data-i18n="stepTwo"></p>
+            <h1 id="needsTitle" data-i18n="tellNeeds"></h1>
+            <p class="section-intro" data-i18n="needsHint"></p>
+            <form id="needsForm" novalidate>
+              <div class="form-grid">
+                <label><span data-i18n="age"></span><input id="age" type="number" min="18" max="85" value="35" required></label>
+                <label><span data-i18n="household"></span><select id="household"><option value="single" data-i18n="single"></option><option value="couple" data-i18n="couple"></option><option value="family" data-i18n="family"></option></select></label>
+                <label><span data-i18n="budget"></span><span class="input-affix"><span id="currencySymbol">€</span><input id="budget" type="number" min="10" step="10" value="100" required></span></label>
+                <label><span data-i18n="deductible"></span><select id="deductible"><option value="low" data-i18n="low"></option><option value="medium" data-i18n="medium"></option><option value="high" data-i18n="high"></option></select></label>
+              </div>
+
+              <fieldset>
+                <legend data-i18n="priorities"></legend>
+                <p class="field-help" data-i18n="priorityHint"></p>
+                <div class="range-grid">
+                  <label><span data-i18n="price"></span><output for="priceWeight">4</output><input id="priceWeight" type="range" min="1" max="5" value="4"></label>
+                  <label><span data-i18n="coverage"></span><output for="coverageWeight">4</output><input id="coverageWeight" type="range" min="1" max="5" value="4"></label>
+                  <label><span data-i18n="flexibility"></span><output for="flexWeight">3</output><input id="flexWeight" type="range" min="1" max="5" value="3"></label>
+                  <label><span data-i18n="extras"></span><output for="extrasWeight">2</output><input id="extrasWeight" type="range" min="1" max="5" value="2"></label>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend data-i18n="mustHave"></legend>
+                <div id="featureChoices" class="feature-choices"></div>
+              </fieldset>
+
+              <label class="consent"><input id="savePreference" type="checkbox"><span><strong data-i18n="remember"></strong><small data-i18n="rememberHint"></small></span></label>
+              <p id="formError" class="form-error" role="alert"></p>
+              <button class="primary-button" type="submit"><span data-i18n="compare"></span><span aria-hidden="true">→</span></button>
+            </form>
+          </section>
+
+          <section id="step3" class="step-section" aria-labelledby="resultsTitle" hidden>
+            <button class="back-button" type="button" data-back="2">← <span data-i18n="editAnswers"></span></button>
+            <div class="results-heading">
+              <div><p class="eyebrow" data-i18n="stepThree"></p><h1 id="resultsTitle" data-i18n="yourMatches"></h1></div>
+              <button id="printButton" class="secondary-button" type="button" data-i18n="print"></button>
+            </div>
+            <div class="demo-warning"><strong data-i18n="demoTitle"></strong><span data-i18n="demoBody"></span></div>
+            <div class="results-controls">
+              <label><span data-i18n="sort"></span><select id="sortResults"><option value="score" data-i18n="bestMatch"></option><option value="price" data-i18n="lowestPrice"></option><option value="coverage" data-i18n="mostCoverage"></option></select></label>
+              <label><input id="withinBudget" type="checkbox"><span data-i18n="budgetOnly"></span></label>
+            </div>
+            <div id="resultsList" class="results-list"></div>
+            <section id="comparison" class="comparison" hidden><h2 data-i18n="sideBySide"></h2><div class="table-wrap"><table><thead id="compareHead"></thead><tbody id="compareBody"></tbody></table></div></section>
+            <details class="methodology"><summary data-i18n="methodology"></summary><p data-i18n="methodologyBody"></p></details>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Policy Compass <span aria-hidden="true">•</span> <span data-i18n="footerText">Independent demonstration. No commercial relationships.</span></p>
+  </footer>
+  <script src="locales/translations.js"></script>
+  <script src="data/config.js"></script>
+  <script src="data/policies.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

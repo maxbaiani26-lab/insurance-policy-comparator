@@ -33,9 +33,11 @@
         </div>
       </div>
       <div class="country-panel">
-        <label for="countrySearch">Country / País / Paese / Land / Pays</label>
-        <input id="countrySearch" type="search" autocomplete="off" placeholder="Search…">
-        <div id="countryGrid" class="country-grid" role="list"></div>
+        <label for="countrySelect">Country / País / Paese / Land / Pays</label>
+        <select id="countrySelect" class="country-select">
+          <option value="">Choose / Elige / Scegli / Wählen / Choisissez…</option>
+        </select>
+        <p class="select-help">The country name is shown in its local language.</p>
         <div id="languagePanel" class="language-panel" hidden>
           <p id="languagePrompt"></p>
           <div id="languageChoices" class="language-choices"></div>

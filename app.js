@@ -10,10 +10,15 @@
   function init(){
     renderCountries(); bind();
     const saved=JSON.parse(localStorage.getItem("policyCompassPreferences")||"null");
-    if(saved?.consented&&APP_CONFIG.countries.some(c=>c.code===saved.country)){selectCountry(saved.country,saved.lang);}
+    if(saved?.consented&&APP_CONFIG.countries.some(c=>c.code===saved.country)){
+      $("#countrySelect").value=saved.country;
+    }
   }
   function bind(){
-    $("#countrySearch").addEventListener("input",renderCountries);
+    $("#countrySelect").addEventListener("change",e=>{
+      $("#languagePanel").hidden=true;
+      if(e.target.value)selectCountry(e.target.value);
+    });
     $("#changeLocale").addEventListener("click",showOnboarding);
     $("#resetApp").addEventListener("click",()=>{localStorage.removeItem("policyCompassPreferences");location.reload()});
     $$('[data-back]').forEach(b=>b.addEventListener("click",()=>showStep(+b.dataset.back)));
@@ -24,13 +29,16 @@
     $("#printButton").addEventListener("click",()=>window.print());
   }
   function renderCountries(){
-    const q=$("#countrySearch").value.toLocaleLowerCase();
-    $("#countryGrid").innerHTML=APP_CONFIG.countries.filter(c=>c.name.toLocaleLowerCase().includes(q)).map(c=>`<button class="country-card" role="listitem" data-country="${c.code}" type="button"><span class="flag" aria-hidden="true">${c.flag}</span><span>${c.name}<small>${c.languages.map(l=>l.name).join(" · ")}</small></span></button>`).join("");
-    $$('.country-card').forEach(b=>b.addEventListener("click",()=>selectCountry(b.dataset.country)));
+    const select=$("#countrySelect");
+    APP_CONFIG.countries.forEach(c=>{
+      const option=document.createElement("option");
+      option.value=c.code;
+      option.textContent=`${c.flag} ${c.name} — ${c.languages.map(l=>l.name).join(" / ")}`;
+      select.appendChild(option);
+    });
   }
   function selectCountry(code,preferred){
     const c=APP_CONFIG.countries.find(x=>x.code===code);state.country=code;
-    $$('.country-card').forEach(b=>b.classList.toggle("selected",b.dataset.country===code));
     if(preferred&&c.languages.some(l=>l.code===preferred)){chooseLanguage(preferred);return}
     if(c.languages.length===1){chooseLanguage(c.languages[0].code);return}
     $("#languagePanel").hidden=false;$("#languagePrompt").textContent=`${c.flag} ${c.name} — choose a language / choisissez une langue / Sprache wählen`;
@@ -47,7 +55,7 @@
     $("#contextFlag").textContent=c.flag;$("#contextCountry").textContent=c.name;$("#regulatoryNotice").textContent=c.notice[state.lang]||c.notice[Object.keys(c.notice)[0]];$("#currencySymbol").textContent=new Intl.NumberFormat(c.locale,{style:"currency",currency:c.currency}).formatToParts(0).find(p=>p.type==="currency")?.value||c.currency;
     renderCategories();showStep(1);
   }
-  function showOnboarding(){$("#app").hidden=true;$("#onboarding").hidden=false;$("#languagePanel").hidden=true;$("#countrySearch").focus();}
+  function showOnboarding(){$("#app").hidden=true;$("#onboarding").hidden=false;$("#languagePanel").hidden=true;$("#countrySelect").focus();}
   function showStep(n){
     $$('.step-section').forEach((s,i)=>s.hidden=i!==n-1);$$('.stepper li').forEach((s,i)=>s.classList.toggle("active",i<=n-1));
     document.title=`${n}/3 · Policy Compass`;$("#liveRegion").textContent=`${n}/3`;window.scrollTo({top:0,behavior:"smooth"});

@@ -2,6 +2,8 @@
 
 Policy Compass is a privacy-preserving, multilingual insurance comparison demo. It runs entirely in the browser and can be hosted directly on GitHub Pages. It uses deterministic scoring—not a remote or opaque AI service—to rank fictional policies against the user’s stated needs.
 
+The landing page always opens with a country dropdown. Selecting a country with multiple supported official languages reveals a second language choice before the comparator begins.
+
 > **Important:** Every insurer, policy, price, term, and limit in this repository is fictional demonstration data. This is not insurance, legal, or financial advice and must not be presented as a live-market comparison.
 
 ## Supported markets and languages

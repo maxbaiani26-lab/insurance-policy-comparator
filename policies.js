@@ -8,13 +8,14 @@
   const names=["Essential","Balanced","Complete"];
   const insurers=["Northstar Mutual (fictional)","Civic Shield (fictional)","Lighthouse Cover (fictional)"];
   window.POLICY_DATA={};
-  Object.keys(countryFactor).forEach(country=>{
+  APP_CONFIG.countries.forEach(({code:country})=>{
+    const factor=countryFactor[country]||1;
     window.POLICY_DATA[country]={};
     Object.keys(features).forEach(category=>{
       window.POLICY_DATA[country][category]=names.map((name,i)=>({
         id:`${country}-${category}-${i+1}`,
         insurer:insurers[i],name,category,country,
-        premium:Math.round(basePrice[category]*countryFactor[country]*[.72,1,1.38][i]),
+        premium:Math.round(basePrice[category]*factor*[.72,1,1.38][i]),
         deductible:["high","medium","low"][i],
         deductibleAmount:[750,300,100][i],
         coverage:[58,78,94][i],flexibility:[54,78,90][i],extras:[35,67,96][i],

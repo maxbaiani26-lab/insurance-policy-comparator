@@ -6,7 +6,9 @@ The landing page always opens with a country dropdown. Selecting a country with 
 
 > **Important:** Every insurer, policy, price, term, and limit in this repository is fictional demonstration data. This is not insurance, legal, or financial advice and must not be presented as a live-market comparison.
 
-## Supported markets and languages
+## Countries and languages
+
+The country dropdown contains 195 countries, from Afghanistan to Zimbabwe. Six markets currently have dedicated local-language interfaces and notices; the remaining countries use the English interface and clearly labeled generic demonstration data until a verified local catalog and translation are added.
 
 | Market | Interface languages | Currency |
 |---|---|---|

@@ -23,3 +23,19 @@ window.APP_CONFIG={
     nl:{outpatient:"Poliklinische zorg",dental:"Tandzorg",mental:"Geestelijke gezondheid",medical:"Medische noodhulp",cancellation:"Annulering",baggage:"Bagage",liability:"Aansprakelijkheid",collision:"Aanrijding",roadside:"Pechhulp",building:"Gebouw",contents:"Inboedel",theft:"Diefstal",death:"Overlijden",disability:"Arbeidsongeschiktheid",critical:"Ernstige ziekte"}
   }
 };
+
+// Read the complete ISO country list from the static HTML options. This keeps
+// the dropdown usable before JavaScript and adds a safe generic demo profile
+// for countries that do not yet have a dedicated localization pack.
+document.querySelectorAll("#countrySelect option[value]").forEach(option=>{
+  if(!option.value||window.APP_CONFIG.countries.some(country=>country.code===option.value))return;
+  window.APP_CONFIG.countries.push({
+    code:option.value,
+    name:option.textContent,
+    flag:String.fromCodePoint(...[...option.value].map(char=>127397+char.charCodeAt())),
+    currency:"USD",
+    locale:"en-US",
+    languages:[{code:"en",name:"English"}],
+    notice:{en:"Demonstration only. No market-specific regulatory review or verified policy catalog is available for this country."}
+  });
+});

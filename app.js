@@ -36,6 +36,7 @@
   }
   function renderCountries(){
     const select=$("#countrySelect");
+    if(select.options.length>1)return;
     APP_CONFIG.countries.forEach(c=>{
       const option=document.createElement("option");
       option.value=c.code;

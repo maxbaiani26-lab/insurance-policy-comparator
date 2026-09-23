@@ -39,8 +39,11 @@
         </select>
         <p class="select-help">The country name is shown in its local language.</p>
         <div id="languagePanel" class="language-panel" hidden>
-          <p id="languagePrompt"></p>
-          <div id="languageChoices" class="language-choices"></div>
+          <label id="languagePrompt" for="languageSelect"></label>
+          <select id="languageSelect" class="country-select"></select>
+          <button id="continueCountry" class="primary-button country-continue" type="button" disabled>
+            <span>Continue / Continuar / Continua</span><span aria-hidden="true">→</span>
+          </button>
         </div>
       </div>
     </section>

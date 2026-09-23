@@ -12,12 +12,18 @@
     const saved=JSON.parse(localStorage.getItem("policyCompassPreferences")||"null");
     if(saved?.consented&&APP_CONFIG.countries.some(c=>c.code===saved.country)){
       $("#countrySelect").value=saved.country;
+      prepareCountry(saved.country,saved.lang);
     }
   }
   function bind(){
     $("#countrySelect").addEventListener("change",e=>{
-      $("#languagePanel").hidden=true;
-      if(e.target.value)selectCountry(e.target.value);
+      if(e.target.value)prepareCountry(e.target.value);
+      else $("#languagePanel").hidden=true;
+    });
+    $("#languageSelect").addEventListener("change",e=>$("#continueCountry").disabled=!e.target.value);
+    $("#continueCountry").addEventListener("click",()=>{
+      const lang=$("#languageSelect").value;
+      if(state.country&&lang)chooseLanguage(lang);
     });
     $("#changeLocale").addEventListener("click",showOnboarding);
     $("#resetApp").addEventListener("click",()=>{localStorage.removeItem("policyCompassPreferences");location.reload()});
@@ -37,13 +43,15 @@
       select.appendChild(option);
     });
   }
-  function selectCountry(code,preferred){
+  function prepareCountry(code,preferred){
     const c=APP_CONFIG.countries.find(x=>x.code===code);state.country=code;
-    if(preferred&&c.languages.some(l=>l.code===preferred)){chooseLanguage(preferred);return}
-    if(c.languages.length===1){chooseLanguage(c.languages[0].code);return}
-    $("#languagePanel").hidden=false;$("#languagePrompt").textContent=`${c.flag} ${c.name} — choose a language / choisissez une langue / Sprache wählen`;
-    $("#languageChoices").innerHTML=c.languages.map(l=>`<button type="button" data-lang="${l.code}">${l.name}</button>`).join("");
-    $$('#languageChoices button').forEach(b=>b.addEventListener("click",()=>chooseLanguage(b.dataset.lang)));
+    const languageSelect=$("#languageSelect");
+    $("#languagePanel").hidden=false;
+    $("#languagePrompt").textContent=c.languages.length>1?`${c.flag} ${c.name} — choose a language / choisissez une langue / Sprache wählen`:`${c.flag} ${c.name} — language / idioma / lingua`;
+    languageSelect.innerHTML=(c.languages.length>1?'<option value="">Choose / Elige / Scegli / Wählen / Choisissez…</option>':'')+c.languages.map(l=>`<option value="${l.code}">${l.name}</option>`).join("");
+    const validPreferred=preferred&&c.languages.some(l=>l.code===preferred);
+    languageSelect.value=validPreferred?preferred:(c.languages.length===1?c.languages[0].code:"");
+    $("#continueCountry").disabled=!languageSelect.value;
   }
   function chooseLanguage(lang){state.lang=lang;document.documentElement.lang=lang;applyTranslations();openApp();}
   function applyTranslations(){
